@@ -21,18 +21,18 @@ $language = L_ENGLISH;
 					$.ajax({
 						success: function () {
 							$("#new-user-form").toggle();
-							$("#existing-user-form").hide();
+							$("#new-ticket-form").hide();
 						}
 					});
 				});
 			});
 			
-			// Hide or show existing user form
+			// Hide or show new ticket form
 			$(function () {
-				$(document).on('click', '.btn.btn-secondary.toggle-existing-user', function () {
+				$(document).on('click', '.btn.btn-secondary.toggle-new-ticket', function () {
 					$.ajax({
 						success: function () {
-							$("#existing-user-form").toggle();
+							$("#new-ticket-form").toggle();
 							$("#new-user-form").hide();
 						}
 					});
@@ -68,8 +68,8 @@ $language = L_ENGLISH;
 						<!-- New user button -->
 						<button type="button" class="btn btn-secondary toggle-new-user"><?php echo $language['new-user-button-name']; ?></button>
 						
-						<!-- Existing user button -->
-						<button type="button" class="btn btn-secondary toggle-existing-user"><?php echo $language['existing-user-button-name']; ?></button>
+						<!-- New ticket button -->
+						<button type="button" class="btn btn-secondary toggle-new-ticket"><?php echo $language['new-ticket-button-name']; ?></button>
 					</div>
 				</div>
 			</div>
@@ -96,16 +96,61 @@ $language = L_ENGLISH;
 							<label for="new-user-email"><b><?php echo $language['new-user-email']; ?></b></label>
 							<input type="email" class="form-control" id="new-user-email" placeholder="<?php echo $language['new-user-email-placeholder']; ?>">
 						</div>
-						
-						<!-- Specialists -->
+						<button type="submit" class="btn btn-primary"><?php echo $language['new-user-submit']; ?></button>
+					</form>
+					
+					<!-- New ticket form -->
+					<form id="new-ticket-form" method="post" style="display: none;">
+						<!-- Clients -->
 						<div class="form-group">
-							<label for="new-user-specialist"><b><?php echo $language['new-user-specialist-select-label']; ?></b></label>
-							<select class="form-control" id="new-user-specialist" name="specialist-id">
+							<label for="client"><b><?php echo $language['new-ticket-client-select-label']; ?></b></label>
+							<select class="form-control" id="client" name="client-id">
 								<?php
 								$connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
 								if (!$connection)
 								{
-									echo '<option value="-1">' . $language['new-user-specialist-error'] . '</option>';
+									echo '<option value="-1">' . $language['new-ticket-client-error'] . '</option>';
+								}
+								else
+								{
+									// Selects all clients
+									$sql = "SELECT id, name, surname FROM " . TBL_USER . " WHERE JSON_CONTAINS(roles, 'ROLE_CLIENT') = 1 ORDER BY name ASC, surname ASC";
+									$clients = mysqli_query($connection, $sql);
+									
+									if (!$clients)
+									{
+										echo '<option value="-1">' . $language['new-ticket-client-error'] . '</option>';
+									}
+									else
+									{
+										// Prints all clients
+										if (mysqli_num_rows($clients) > 0)
+										{
+											while($client = mysqli_fetch_assoc($clients))
+											{
+												$fullName = $client['name'] . ' ' . $client['surname'];
+												echo '<option value="' . $client['id'] . '">' . $fullName . '</option>';
+											}
+										}
+										else
+										{
+											echo '<option value="-1">' . $language['new-ticket-client-error'] . '</option>';
+										}
+									}
+								}
+								?>
+							</select>
+						</div>
+						
+						<!-- Specialists -->
+						<div class="form-group">
+							<label for="specialist"><b><?php echo $language['new-ticket-specialist-select-label']; ?></b></label>
+							<select class="form-control" id="specialist" name="specialist-id">
+								<?php
+								$connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+								if (!$connection)
+								{
+									echo '<option value="-1">' . $language['new-ticket-specialist-error'] . '</option>';
 								}
 								else
 								{
@@ -115,7 +160,7 @@ $language = L_ENGLISH;
 									
 									if (!$specialists)
 									{
-										echo '<option value="-1">' . $language['new-user-specialist-error'] . '</option>';
+										echo '<option value="-1">' . $language['new-ticket-specialist-error'] . '</option>';
 									}
 									else
 									{
@@ -130,59 +175,14 @@ $language = L_ENGLISH;
 										}
 										else
 										{
-											echo '<option value="-1">' . $language['new-user-specialist-error'] . '</option>';
+											echo '<option value="-1">' . $language['new-ticket-specialist-error'] . '</option>';
 										}
 									}
 								}
 								?>
 							</select>
 						</div>
-						<button type="submit" class="btn btn-primary"><?php echo $language['new-user-submit']; ?></button>
-					</form>
-					
-					<!-- Existing user form -->
-					<form id="existing-user-form" method="post" style="display: none;">
-						<!-- Users -->
-						<div class="form-group">
-							<label for="existing-user"><b><?php echo $language['existing-user-select-label']; ?></b></label>
-							<select class="form-control" id="existing-user" name="user-id">
-								<?php
-								$connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
-								if (!$connection)
-								{
-									echo '<option value="-1">' . $language['existing-user-error'] . '</option>';
-								}
-								else
-								{
-									// Selects all users
-									$sql = "SELECT id, name, surname FROM " . TBL_USER . " WHERE JSON_CONTAINS(roles, 'ROLE_CLIENT') = 1 ORDER BY name ASC, surname ASC";
-									$users = mysqli_query($connection, $sql);
-									
-									if (!$users)
-									{
-										echo '<option value="-1">' . $language['existing-user-error'] . '</option>';
-									}
-									else
-									{
-										// Prints all users
-										if (mysqli_num_rows($users) > 0)
-										{
-											while($user = mysqli_fetch_assoc($users))
-											{
-												$fullName = $user['name'] . ' ' . $user['surname'];
-												echo '<option value="' . $user['id'] . '">' . $fullName . '</option>';
-											}
-										}
-										else
-										{
-											echo '<option value="-1">' . $language['existing-user-error'] . '</option>';
-										}
-									}
-								}
-								?>
-							</select>
-						</div>
-						<button type="submit" class="btn btn-primary"><?php echo $language['existing-user-submit']; ?></button>
+						<button type="submit" class="btn btn-primary"><?php echo $language['new-ticket-submit']; ?></button>
 					</form>
 				</div>
 			</div>

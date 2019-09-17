@@ -29,8 +29,8 @@ define("L_ENGLISH",
 		
 		// Admin action buttons
 		'button-group-aria-label' => 'Actions', 
-		'new-user-button-name' => 'Add new user to queue', 
-		'existing-user-button-name' => 'Add existing user to queue', 
+		'new-user-button-name' => 'Register new user', 
+		'new-ticket-button-name' => 'Add user to client board', 
 		
 		// Admin new user form
 		'new-user-name' => 'Name', 
@@ -39,14 +39,14 @@ define("L_ENGLISH",
 		'new-user-surname-placeholder' => 'Surname', 
 		'new-user-email' => 'Email', 
 		'new-user-email-placeholder' => 'Email', 
-		'new-user-specialist-select-label' => 'Specialist', 
-		'new-user-specialist-error' => 'No specialists to display', 
 		'new-user-submit' => 'Submit', 
 		
-		// Admin existing user form
-		'existing-user-select-label' => 'User', 
-		'existing-user-error' => 'No users to display', 
-		'existing-user-submit' => 'Submit'
+		// Admin new ticket form
+		'new-ticket-client-select-label' => 'User', 
+		'new-ticket-client-error' => 'No users to display', 
+		'new-ticket-specialist-select-label' => 'Specialist', 
+		'new-ticket-specialist-error' => 'No specialists to display', 
+		'new-ticket-submit' => 'Submit'
 	)
 );
 ?>
