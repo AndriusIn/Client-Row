@@ -1,8 +1,19 @@
 <?php
 include("include/config.php");
 
+session_start();
+
 // Sets language
-$language = L_ENGLISH;
+$language;
+if (isset($_SESSION['language']))
+{
+	$language = $_SESSION['language'];
+}
+else
+{
+	$language = L_ENGLISH;
+	$_SESSION['language'] = $language;
+}
 ?>
 <html>
 	<head>

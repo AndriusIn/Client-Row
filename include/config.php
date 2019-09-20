@@ -30,7 +30,7 @@ define("L_ENGLISH",
 		// Admin action buttons
 		'button-group-aria-label' => 'Actions', 
 		'new-user-button-name' => 'Register new user', 
-		'new-ticket-button-name' => 'Add user to client board', 
+		'new-ticket-button-name' => 'Add client to client board', 
 		
 		// Admin new user form
 		'new-user-name' => 'Name', 
@@ -39,13 +39,35 @@ define("L_ENGLISH",
 		'new-user-surname-placeholder' => 'Surname', 
 		'new-user-email' => 'Email', 
 		'new-user-email-placeholder' => 'Email', 
+		'new-user-role-select-label' => 'Role', 
+		'new-user-client-role-name' => 'Client', 
+		'new-user-admin-role-name' => 'Admin', 
+		'new-user-specialist-role-name' => 'Specialist', 
 		'new-user-submit' => 'Submit', 
 		
+		// Admin new user form submission
+		'new-user-name-empty-error' => 'Name is empty!', 
+		'new-user-name-pattern-error' => 'Name contains non-letter characters!', 
+		'new-user-surname-empty-error' => 'Surname is empty!', 
+		'new-user-surname-pattern-error' => 'Surname contains non-letter characters!', 
+		'new-user-email-empty-error' => 'Email is empty!', 
+		'new-user-email-pattern-error' => 'Email format is invalid!', 
+		'new-user-email-exists-error' => 'Email already exists', 
+		'new-user-connection-error' => 'Could not connect to database!', 
+		'new-user-insert-error' => 'Could not insert user to database!', 
+		'new-user-message-name' => 'Message:', 
+		'new-user-message-success' => 'User registration complete', 
+		'new-user-message-fail' => 'User registration failed!', 
+		
 		// Admin new ticket form
-		'new-ticket-client-select-label' => 'User', 
-		'new-ticket-client-error' => 'No users to display', 
+		'new-ticket-client-select-label' => 'Client', 
+		'new-ticket-client-connection-error' => 'Could not connect to database!', 
+		'new-ticket-client-select-error' => 'Could not select clients from database!', 
+		'new-ticket-client-empty-error' => 'Please register new clients', 
 		'new-ticket-specialist-select-label' => 'Specialist', 
-		'new-ticket-specialist-error' => 'No specialists to display', 
+		'new-ticket-specialist-connection-error' => 'Could not connect to database!', 
+		'new-ticket-specialist-select-error' => 'Could not select specialists from database!', 
+		'new-ticket-specialist-empty-error' => 'Please register new specialists', 
 		'new-ticket-submit' => 'Submit'
 	)
 );
