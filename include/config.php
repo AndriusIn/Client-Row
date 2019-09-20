@@ -68,7 +68,25 @@ define("L_ENGLISH",
 		'new-ticket-specialist-connection-error' => 'Could not connect to database!', 
 		'new-ticket-specialist-select-error' => 'Could not select specialists from database!', 
 		'new-ticket-specialist-empty-error' => 'Please register new specialists', 
-		'new-ticket-submit' => 'Submit'
+		'new-ticket-submit' => 'Submit', 
+		
+		// Admin new ticket form submission
+		'new-ticket-connection-error' => 'Could not connect to database!', 
+		'new-ticket-insert-error' => 'Could not insert ticket to database!', 
+		'new-ticket-message-name' => 'Message:', 
+		'new-ticket-message-success' => 'Ticket submission complete.', 
+		'new-ticket-client-header' => 'Client', 
+		'new-ticket-specialist-header' => 'Specialist', 
+		'new-ticket-user-name-header' => 'Name', 
+		'new-ticket-user-surname-header' => 'Surname', 
+		'new-ticket-user-email-header' => 'Email', 
+		'new-ticket-client-name-error' => 'Failed to get client name!', 
+		'new-ticket-client-surname-error' => 'Failed to get client surname!', 
+		'new-ticket-client-email-error' => 'Failed to get client email!', 
+		'new-ticket-specialist-name-error' => 'Failed to get specialist name!', 
+		'new-ticket-specialist-surname-error' => 'Failed to get specialist surname!', 
+		'new-ticket-specialist-email-error' => 'Failed to get specialist email!', 
+		'new-ticket-message-fail' => 'Ticket submission failed!'
 	)
 );
 ?>
