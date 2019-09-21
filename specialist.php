@@ -43,6 +43,9 @@ else
 			</div>
 		</nav>
 		
+		<!-- Page heading -->
+		<h1 class="display-4" style="text-align: center;"><?php echo $language['specialist-page-title']; ?></h1>
+		
 		<!-- Page content -->
 		<div class="container-fluid py-3">
 			<p>Specialist interface</p>

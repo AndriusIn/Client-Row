@@ -30,7 +30,7 @@ if ($connection)
 		<script>
 			// Hides or shows new user form
 			$(function () {
-				$(document).on('click', '.btn.btn-secondary.toggle-new-user', function () {
+				$(document).on('click', '.btn.btn-secondary.btn-block.toggle-new-user', function () {
 					$.ajax({
 						success: function () {
 							// Hides or shows new user form
@@ -54,7 +54,7 @@ if ($connection)
 			
 			// Hides or shows new ticket form
 			$(function () {
-				$(document).on('click', '.btn.btn-secondary.toggle-new-ticket', function () {
+				$(document).on('click', '.btn.btn-secondary.btn-block.toggle-new-ticket', function () {
 					$.ajax({
 						success: function () {
 							// Hides or shows new ticket form
@@ -131,18 +131,19 @@ if ($connection)
 			</div>
 		</nav>
 		
-		<!-- Page container -->
+		<!-- Page heading -->
+		<h1 class="display-4" style="text-align: center;"><?php echo $language['admin-page-title']; ?></h1>
+		
+		<!-- Page content -->
 		<div class="container-fluid py-3">
 			<!-- Action buttons -->
 			<div class="row">
 				<div class="col">
-					<div class="btn-group" role="group" aria-label="<?php echo $language['button-group-aria-label']; ?>">
-						<!-- New user button -->
-						<button type="button" class="btn btn-secondary toggle-new-user"><?php echo $language['new-user-button-name']; ?></button>
-						
-						<!-- New ticket button -->
-						<button type="button" class="btn btn-secondary toggle-new-ticket"><?php echo $language['new-ticket-button-name']; ?></button>
-					</div>
+					<!-- New user button -->
+					<button type="button" class="btn btn-secondary btn-block toggle-new-user"><?php echo $language['new-user-button-name']; ?></button>
+					
+					<!-- New ticket button -->
+					<button type="button" class="btn btn-secondary btn-block toggle-new-ticket"><?php echo $language['new-ticket-button-name']; ?></button>
 				</div>
 			</div>
 			
@@ -335,15 +336,31 @@ if ($connection)
 							<table class="table">
 								<thead class="thead-dark">
 									<tr>
-										<th style="width: 25%;"><?php echo $language['new-ticket-client-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
+										<th colspan="4" style="text-align: center;"><?php echo $language['new-ticket-client-header']; ?></th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<th style="width: 25%;">#</th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-id-header']; ?></th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
+									</tr>
+									<tr>
+										<td style="width: 25%;">
+											<?php
+											// Prints client ID
+											if (isset($_SESSION['new-ticket-submission-client-id']))
+											{
+												echo $_SESSION['new-ticket-submission-client-id'];
+												unset($_SESSION['new-ticket-submission-client-id']);
+											}
+											else
+											{
+												echo $language['new-ticket-client-id-error'];
+											}
+											?>
+										</td>
 										<td style="width: 25%;">
 											<?php
 											// Prints client name
@@ -398,15 +415,31 @@ if ($connection)
 							<table class="table">
 								<thead class="thead-light">
 									<tr>
-										<th style="width: 25%;"><?php echo $language['new-ticket-specialist-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
+										<th colspan="4" style="text-align: center;"><?php echo $language['new-ticket-specialist-header']; ?></th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<th style="width: 25%;">#</th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-id-header']; ?></th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
+										<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
+									</tr>
+									<tr>
+										<td style="width: 25%;">
+											<?php
+											// Prints specialist ID
+											if (isset($_SESSION['new-ticket-submission-specialist-id']))
+											{
+												echo $_SESSION['new-ticket-submission-specialist-id'];
+												unset($_SESSION['new-ticket-submission-specialist-id']);
+											}
+											else
+											{
+												echo $language['new-ticket-specialist-id-error'];
+											}
+											?>
+										</td>
 										<td style="width: 25%;">
 											<?php
 											// Prints specialist name

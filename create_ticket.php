@@ -55,13 +55,14 @@ else
 		$_SESSION['new-ticket-submission-message'] .= '</p>';
 		
 		// Gets client's name, surname and email
-		$sql = "SELECT name, surname, email FROM " . TBL_USER . " WHERE id = '$client_id' LIMIT 1";
+		$sql = "SELECT id, name, surname, email FROM " . TBL_USER . " WHERE id = '$client_id' LIMIT 1";
 		$result = mysqli_query($connection, $sql);
 		if ($result)
 		{
 			if (mysqli_num_rows($result) > 0)
 			{
 				$client = mysqli_fetch_assoc($result);
+				$_SESSION['new-ticket-submission-client-id'] = $client['id'];
 				$_SESSION['new-ticket-submission-client-name'] = $client['name'];
 				$_SESSION['new-ticket-submission-client-surname'] = $client['surname'];
 				$_SESSION['new-ticket-submission-client-email'] = $client['email'];
@@ -69,13 +70,14 @@ else
 		}
 		
 		// Gets specialist's name, surname and email
-		$sql = "SELECT name, surname, email FROM " . TBL_USER . " WHERE id = '$specialist_id' LIMIT 1";
+		$sql = "SELECT id, name, surname, email FROM " . TBL_USER . " WHERE id = '$specialist_id' LIMIT 1";
 		$result = mysqli_query($connection, $sql);
 		if ($result)
 		{
 			if (mysqli_num_rows($result) > 0)
 			{
 				$specialist = mysqli_fetch_assoc($result);
+				$_SESSION['new-ticket-submission-specialist-id'] = $specialist['id'];
 				$_SESSION['new-ticket-submission-specialist-name'] = $specialist['name'];
 				$_SESSION['new-ticket-submission-specialist-surname'] = $specialist['surname'];
 				$_SESSION['new-ticket-submission-specialist-email'] = $specialist['email'];

@@ -9,17 +9,13 @@ define("DB_NAME", "clientrow");
 define("TBL_USER", "user");
 define("TBL_TICKET", "ticket");
 
-// Admin interface limits
-define("admin-user-table-limit", 10);
-define("admin-user-table-load-limit", 10);
-
 // Languages
 define("L_ENGLISH", 
 	array(
 		// Page titles
-		'admin-page-title' => 'Admin interface', 
+		'admin-page-title' => 'Admin Interface', 
 		'board-page-title' => 'Client Board', 
-		'specialist-page-title' => 'Specialist interface', 
+		'specialist-page-title' => 'Specialist Interface', 
 		
 		// Navigation bar
 		'navbar-title' => 'Client Board', 
@@ -28,7 +24,6 @@ define("L_ENGLISH",
 		'navbar-specialist-interface' => 'Specialist interface', 
 		
 		// Admin action buttons
-		'button-group-aria-label' => 'Actions', 
 		'new-user-button-name' => 'Register new user', 
 		'new-ticket-button-name' => 'Add client to client board', 
 		
@@ -77,16 +72,26 @@ define("L_ENGLISH",
 		'new-ticket-message-success' => 'Ticket submission complete.', 
 		'new-ticket-client-header' => 'Client', 
 		'new-ticket-specialist-header' => 'Specialist', 
+		'new-ticket-user-id-header' => 'ID', 
 		'new-ticket-user-name-header' => 'Name', 
 		'new-ticket-user-surname-header' => 'Surname', 
 		'new-ticket-user-email-header' => 'Email', 
+		'new-ticket-client-id-error' => 'Failed to get client ID!', 
 		'new-ticket-client-name-error' => 'Failed to get client name!', 
 		'new-ticket-client-surname-error' => 'Failed to get client surname!', 
 		'new-ticket-client-email-error' => 'Failed to get client email!', 
+		'new-ticket-specialist-id-error' => 'Failed to get specialist ID!', 
 		'new-ticket-specialist-name-error' => 'Failed to get specialist name!', 
 		'new-ticket-specialist-surname-error' => 'Failed to get specialist surname!', 
 		'new-ticket-specialist-email-error' => 'Failed to get specialist email!', 
-		'new-ticket-message-fail' => 'Ticket submission failed!'
+		'new-ticket-message-fail' => 'Ticket submission failed!', 
+		
+		// Cliend board
+		'client-board-ticket-id-header' => 'Ticket ID', 
+		'client-board-client-header' => 'Client', 
+		'client-board-specialist-header' => 'Specialist', 
+		'client-board-tickets-error' => 'No tickets found!', 
+		'client-board-load-button-title' => 'Load more'
 	)
 );
 ?>
