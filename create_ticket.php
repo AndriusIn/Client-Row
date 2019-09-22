@@ -11,7 +11,15 @@ if (isset($_SESSION['language']))
 }
 else
 {
-	$language = L_ENGLISH;
+	switch (DEFAULT_LANGUAGE)
+	{
+		case "L_LITHUANIAN":
+			$language = L_LITHUANIAN;
+			break;
+		default:
+			$language = L_ENGLISH;
+			break;
+	}
 	$_SESSION['language'] = $language;
 }
 
@@ -26,8 +34,8 @@ if ($connection)
 }
 
 // Gets form data
-$client_id = $_GET['client-id'];
-$specialist_id = $_GET['specialist-id'];
+$client_id = $_POST['client-id'];
+$specialist_id = $_POST['specialist-id'];
 
 // Submission message
 $_SESSION['new-ticket-submission-message'] = '<p style="display: inline;">' . $language['new-ticket-message-name'];

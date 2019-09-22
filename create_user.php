@@ -11,7 +11,15 @@ if (isset($_SESSION['language']))
 }
 else
 {
-	$language = L_ENGLISH;
+	switch (DEFAULT_LANGUAGE)
+	{
+		case "L_LITHUANIAN":
+			$language = L_LITHUANIAN;
+			break;
+		default:
+			$language = L_ENGLISH;
+			break;
+	}
 	$_SESSION['language'] = $language;
 }
 

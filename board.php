@@ -11,7 +11,15 @@ if (isset($_SESSION['language']))
 }
 else
 {
-	$language = L_ENGLISH;
+	switch (DEFAULT_LANGUAGE)
+	{
+		case "L_LITHUANIAN":
+			$language = L_LITHUANIAN;
+			break;
+		default:
+			$language = L_ENGLISH;
+			break;
+	}
 	$_SESSION['language'] = $language;
 }
 
@@ -120,6 +128,7 @@ if ($connection)
 		
 		<!-- Page content -->
 		<div class="container-fluid py-3">
+			<!-- Ticket table -->
 			<div class="row">
 				<div class="col">
 					<table class="table">

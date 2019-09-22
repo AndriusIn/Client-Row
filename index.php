@@ -4,7 +4,16 @@ include("include/config.php");
 session_start();
 
 // Sets language
-$language = L_ENGLISH;
+$language;
+switch (DEFAULT_LANGUAGE)
+{
+	case "L_LITHUANIAN":
+		$language = L_LITHUANIAN;
+		break;
+	default:
+		$language = L_ENGLISH;
+		break;
+}
 $_SESSION['language'] = $language;
 
 // Sets connection
@@ -36,17 +45,8 @@ if ($connection)
 							// Hides or shows new user form
 							$('#new-user-form-row').toggle();
 							
-							// Hides or shows new user submission message
-							$('#new-user-submission-message-row').toggle();
-							
 							// Hides new ticket form
 							$('#new-ticket-form-row').hide();
-							
-							// Hides new ticket submission message
-							$('#new-ticket-submission-message-row').hide();
-							
-							// Clears new ticket submission message
-							$('#new-ticket-submission-message-row').load('index.php #new-ticket-submission-message-col');
 						}
 					});
 				});
@@ -60,17 +60,8 @@ if ($connection)
 							// Hides or shows new ticket form
 							$('#new-ticket-form-row').toggle();
 							
-							// Hides or shows new ticket submission message
-							$('#new-ticket-submission-message-row').toggle();
-							
 							// Hides new user form
 							$('#new-user-form-row').hide();
-							
-							// Hides new user submission message
-							$('#new-user-submission-message-row').hide();
-							
-							// Clears new user submission message
-							$('#new-user-submission-message-row').load('index.php #new-user-submission-message-col');
 						}
 					});
 				});
@@ -78,18 +69,18 @@ if ($connection)
 			
 			// Submits new user
 			$(function (){
-				$('#new-user-form').on('submit', function (e){
+				$(document).on('submit', '.new-user-form', function (e) {
 					e.preventDefault();
 					$.ajax({
 						type: 'post', 
 						url: 'create_user.php', 
-						data: $('#new-user-form').serialize(), 
+						data: $('#' + e.target.id).serialize(), 
 						success: function () {
 							// Loads new user submission message
 							$('#new-user-submission-message-row').load('index.php #new-user-submission-message-col');
 							
 							// Loads new ticket form
-							$('#new-ticket-form').load('index.php #new-ticket-form-content');
+							$('#new-ticket-form-row').load('index.php #new-ticket-form-col');
 						}
 					});
 				});
@@ -97,12 +88,12 @@ if ($connection)
 			
 			// Submits new ticket
 			$(function (){
-				$('#new-ticket-form').on('submit', function (e){
+				$(document).on('submit', '.new-ticket-form', function (e) {
 					e.preventDefault();
 					$.ajax({
-						type: 'get', 
+						type: 'post', 
 						url: 'create_ticket.php', 
-						data: $('#new-ticket-form').serialize(), 
+						data: $('#' + e.target.id).serialize(), 
 						success: function () {
 							// Loads new ticket submission message
 							$('#new-ticket-submission-message-row').load('index.php #new-ticket-submission-message-col');
@@ -147,344 +138,358 @@ if ($connection)
 				</div>
 			</div>
 			
-			<!-- New user form -->
+			<!-- New user form and submission message -->
 			<div class="row" id="new-user-form-row" style="display: none;">
 				<div class="col" id="new-user-form-col">
-					<form id="new-user-form" method="post">
-						<!-- Name -->
-						<div class="form-group">
-							<label for="new-user-name"><b><?php echo $language['new-user-name']; ?></b></label>
-							<input type="text" class="form-control" id="new-user-name" name="new-user-name" placeholder="<?php echo $language['new-user-name-placeholder']; ?>">
-						</div>
-						
-						<!-- Surname -->
-						<div class="form-group">
-							<label for="new-user-surname"><b><?php echo $language['new-user-surname']; ?></b></label>
-							<input type="text" class="form-control" id="new-user-surname" name="new-user-surname" placeholder="<?php echo $language['new-user-surname-placeholder']; ?>">
-						</div>
-						
-						<!-- Email -->
-						<div class="form-group">
-							<label for="new-user-email"><b><?php echo $language['new-user-email']; ?></b></label>
-							<input type="text" class="form-control" id="new-user-email" name="new-user-email" placeholder="<?php echo $language['new-user-email-placeholder']; ?>">
-						</div>
-						
-						<!-- Role -->
-						<div class="form-group">
-							<label for="new-user-role"><b><?php echo $language['new-user-role-select-label']; ?></b></label>
-							<select class="form-control" id="new-user-role" name="new-user-role">
-								<option value="ROLE_CLIENT"><?php echo $language['new-user-client-role-name']; ?></option>
-								<option value="ROLE_ADMIN"><?php echo $language['new-user-admin-role-name']; ?></option>
-								<option value="ROLE_SPECIALIST"><?php echo $language['new-user-specialist-role-name']; ?></option>
-							</select>
-						</div>
-						
-						<button type="submit" class="btn btn-primary"><?php echo $language['new-user-submit']; ?></button>
-					</form>
-				</div>
-			</div>
-			
-			<!-- New ticket form -->
-			<div class="row" id="new-ticket-form-row" style="display: none;">
-				<div class="col" id="new-ticket-form-col">
-					<form id="new-ticket-form" method="get">
-						<div id="new-ticket-form-content">
-							<!-- Clients -->
-							<div class="form-group">
-								<label for="client-id"><b><?php echo $language['new-ticket-client-select-label']; ?></b></label>
-								<select class="form-control" id="client-id" name="client-id">
-									<?php
-									if (!$connection)
-									{
-										echo '<option value="-1">' . $language['new-ticket-client-connection-error'] . '</option>';
-									}
-									else
-									{
-										// Selects all clients
-										$sql = "SELECT id, name, surname, email FROM " . TBL_USER . " WHERE JSON_CONTAINS(roles, '\"ROLE_CLIENT\"') = 1 ORDER BY name ASC, surname ASC, email ASC";
-										$clients = mysqli_query($connection, $sql);
-										
-										if (!$clients)
-										{
-											echo '<option value="-1">' . $language['new-ticket-client-select-error'] . '</option>';
-										}
-										else
-										{
-											// Prints all clients
-											if (mysqli_num_rows($clients) > 0)
-											{
-												while($client = mysqli_fetch_assoc($clients))
-												{
-													$fullName = $client['name'] . ' ' . $client['surname'] . ' (' . $client['email'] . ')';
-													echo '<option value="' . $client['id'] . '">' . $fullName . '</option>';
-												}
-											}
-											else
-											{
-												echo '<option value="-1">' . $language['new-ticket-client-empty-error'] . '</option>';
-											}
-										}
-									}
-									?>
-								</select>
-							</div>
-							
-							<!-- Specialists -->
-							<div class="form-group">
-								<label for="specialist-id"><b><?php echo $language['new-ticket-specialist-select-label']; ?></b></label>
-								<select class="form-control" id="specialist-id" name="specialist-id">
-									<?php
-									if (!$connection)
-									{
-										echo '<option value="-1">' . $language['new-ticket-specialist-connection-error'] . '</option>';
-									}
-									else
-									{
-										// Selects all specialists
-										$sql = "SELECT id, name, surname, email FROM " . TBL_USER . " WHERE JSON_CONTAINS(roles, '\"ROLE_SPECIALIST\"') = 1 ORDER BY name ASC, surname ASC, email ASC";
-										$specialists = mysqli_query($connection, $sql);
-										
-										if (!$specialists)
-										{
-											echo '<option value="-1">' . $language['new-ticket-specialist-select-error'] . '</option>';
-										}
-										else
-										{
-											// Prints all specialists
-											if (mysqli_num_rows($specialists) > 0)
-											{
-												while($specialist = mysqli_fetch_assoc($specialists))
-												{
-													$fullName = $specialist['name'] . ' ' . $specialist['surname'] . ' (' . $specialist['email'] . ')';
-													echo '<option value="' . $specialist['id'] . '">' . $fullName . '</option>';
-												}
-											}
-											else
-											{
-												echo '<option value="-1">' . $language['new-ticket-specialist-empty-error'] . '</option>';
-											}
-										}
-									}
-									?>
-								</select>
-							</div>
-							
-							<!-- New ticket submission button -->
-							<?php
-							$buttonIsEnabled = false;
-							
-							// Checks if clients and specialists are not missing
-							if ($clients && $specialists)
-							{
-								if (mysqli_num_rows($clients) > 0 && mysqli_num_rows($specialists) > 0)
-								{
-									$buttonIsEnabled = true;
-								}
-							}
-							
-							if ($buttonIsEnabled)
-							{
-								echo '<button type="submit" class="btn btn-primary">' . $language['new-ticket-submit'] . '</button>';
-							}
-							else
-							{
-								echo '<button type="submit" class="btn btn-primary" disabled>' . $language['new-ticket-submit'] . '</button>';
-							}
-							?>
-						</div>
-					</form>
-				</div>
-			</div>
-			
-			<!-- New user submission message -->
-			<div class="row" id="new-user-submission-message-row" style="display: none;">
-				<div class="col" id="new-user-submission-message-col">
-					<?php
-					// Prints submission message
-					if (isset($_SESSION['new-user-submission-message']))
-					{
-						echo $_SESSION['new-user-submission-message'];
-						unset($_SESSION['new-user-submission-message']);
-					}
-					?>
-				</div>
-			</div>
-			
-			<!-- New ticket submission message and tables -->
-			<div class="row" id="new-ticket-submission-message-row" style="display: none;">
-				<div class="col" id="new-ticket-submission-message-col">
-					<!-- Submission message -->
+					<!-- New user form -->
 					<div class="row">
 						<div class="col">
+							<form id="new-user-form" class="new-user-form" method="post">
+								<!-- Name -->
+								<div class="form-group">
+									<label for="new-user-name"><b><?php echo $language['new-user-name']; ?></b></label>
+									<input type="text" class="form-control" id="new-user-name" name="new-user-name" placeholder="<?php echo $language['new-user-name-placeholder']; ?>">
+								</div>
+								
+								<!-- Surname -->
+								<div class="form-group">
+									<label for="new-user-surname"><b><?php echo $language['new-user-surname']; ?></b></label>
+									<input type="text" class="form-control" id="new-user-surname" name="new-user-surname" placeholder="<?php echo $language['new-user-surname-placeholder']; ?>">
+								</div>
+								
+								<!-- Email -->
+								<div class="form-group">
+									<label for="new-user-email"><b><?php echo $language['new-user-email']; ?></b></label>
+									<input type="text" class="form-control" id="new-user-email" name="new-user-email" placeholder="<?php echo $language['new-user-email-placeholder']; ?>">
+								</div>
+								
+								<!-- Role -->
+								<div class="form-group">
+									<label for="new-user-role"><b><?php echo $language['new-user-role-select-label']; ?></b></label>
+									<select class="form-control" id="new-user-role" name="new-user-role">
+										<option value="ROLE_CLIENT"><?php echo $language['new-user-client-role-name']; ?></option>
+										<option value="ROLE_ADMIN"><?php echo $language['new-user-admin-role-name']; ?></option>
+										<option value="ROLE_SPECIALIST"><?php echo $language['new-user-specialist-role-name']; ?></option>
+									</select>
+								</div>
+								
+								<button type="submit" class="btn btn-primary"><?php echo $language['new-user-submit-button-title']; ?></button>
+							</form>
+						</div>
+					</div>
+					
+					<!-- New user submission message -->
+					<div class="row" id="new-user-submission-message-row">
+						<div class="col" id="new-user-submission-message-col">
 							<?php
-							$tableDisplayStyle = 'display: none;';
-							
 							// Prints submission message
-							if (isset($_SESSION['new-ticket-submission-message']))
+							if (isset($_SESSION['new-user-submission-message']))
 							{
-								$tableDisplayStyle = "";
-								echo $_SESSION['new-ticket-submission-message'];
-								unset($_SESSION['new-ticket-submission-message']);
+								echo $_SESSION['new-user-submission-message'];
+								unset($_SESSION['new-user-submission-message']);
 							}
 							?>
 						</div>
 					</div>
-					
-					<!-- Client table -->
-					<div class="row" style="<?php echo $tableDisplayStyle; ?>">
+				</div>
+			</div>
+			
+			<!-- New ticket form and submission message -->
+			<div class="row" id="new-ticket-form-row" style="display: none;">
+				<div class="col" id="new-ticket-form-col">
+					<!-- New ticket form -->
+					<div class="row">
 						<div class="col">
-							<table class="table">
-								<thead class="thead-dark">
-									<tr>
-										<th colspan="4" style="text-align: center;"><?php echo $language['new-ticket-client-header']; ?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-id-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
-									</tr>
-									<tr>
-										<td style="width: 25%;">
-											<?php
-											// Prints client ID
-											if (isset($_SESSION['new-ticket-submission-client-id']))
+							<form id="new-ticket-form" class="new-ticket-form" method="post">
+								<!-- Clients -->
+								<div class="form-group">
+									<label for="client-id"><b><?php echo $language['new-ticket-client-select-label']; ?></b></label>
+									<select class="form-control" id="client-id" name="client-id">
+										<?php
+										if (!$connection)
+										{
+											echo '<option value="-1">' . $language['new-ticket-client-connection-error'] . '</option>';
+										}
+										else
+										{
+											// Selects all clients
+											$sql = "SELECT id, name, surname, email FROM " . TBL_USER . " WHERE JSON_CONTAINS(roles, '\"ROLE_CLIENT\"') = 1 ORDER BY name ASC, surname ASC, email ASC";
+											$clients = mysqli_query($connection, $sql);
+											
+											if (!$clients)
 											{
-												echo $_SESSION['new-ticket-submission-client-id'];
-												unset($_SESSION['new-ticket-submission-client-id']);
+												echo '<option value="-1">' . $language['new-ticket-client-select-error'] . '</option>';
 											}
 											else
 											{
-												echo $language['new-ticket-client-id-error'];
+												// Prints all clients
+												if (mysqli_num_rows($clients) > 0)
+												{
+													while($client = mysqli_fetch_assoc($clients))
+													{
+														$fullName = $client['name'] . ' ' . $client['surname'] . ' (' . $client['email'] . ')';
+														echo '<option value="' . $client['id'] . '">' . $fullName . '</option>';
+													}
+												}
+												else
+												{
+													echo '<option value="-1">' . $language['new-ticket-client-empty-error'] . '</option>';
+												}
 											}
-											?>
-										</td>
-										<td style="width: 25%;">
-											<?php
-											// Prints client name
-											if (isset($_SESSION['new-ticket-submission-client-name']))
+										}
+										?>
+									</select>
+								</div>
+								
+								<!-- Specialists -->
+								<div class="form-group">
+									<label for="specialist-id"><b><?php echo $language['new-ticket-specialist-select-label']; ?></b></label>
+									<select class="form-control" id="specialist-id" name="specialist-id">
+										<?php
+										if (!$connection)
+										{
+											echo '<option value="-1">' . $language['new-ticket-specialist-connection-error'] . '</option>';
+										}
+										else
+										{
+											// Selects all specialists
+											$sql = "SELECT id, name, surname, email FROM " . TBL_USER . " WHERE JSON_CONTAINS(roles, '\"ROLE_SPECIALIST\"') = 1 ORDER BY name ASC, surname ASC, email ASC";
+											$specialists = mysqli_query($connection, $sql);
+											
+											if (!$specialists)
 											{
-												echo $_SESSION['new-ticket-submission-client-name'];
-												unset($_SESSION['new-ticket-submission-client-name']);
+												echo '<option value="-1">' . $language['new-ticket-specialist-select-error'] . '</option>';
 											}
 											else
 											{
-												echo $language['new-ticket-client-name-error'];
+												// Prints all specialists
+												if (mysqli_num_rows($specialists) > 0)
+												{
+													while($specialist = mysqli_fetch_assoc($specialists))
+													{
+														$fullName = $specialist['name'] . ' ' . $specialist['surname'] . ' (' . $specialist['email'] . ')';
+														echo '<option value="' . $specialist['id'] . '">' . $fullName . '</option>';
+													}
+												}
+												else
+												{
+													echo '<option value="-1">' . $language['new-ticket-specialist-empty-error'] . '</option>';
+												}
 											}
-											?>
-										</td>
-										<td style="width: 25%;">
-											<?php
-											// Prints client surname
-											if (isset($_SESSION['new-ticket-submission-client-surname']))
-											{
-												echo $_SESSION['new-ticket-submission-client-surname'];
-												unset($_SESSION['new-ticket-submission-client-surname']);
-											}
-											else
-											{
-												echo $language['new-ticket-client-surname-error'];
-											}
-											?>
-										</td>
-										<td style="width: 25%;">
-											<?php
-											// Prints client email
-											if (isset($_SESSION['new-ticket-submission-client-email']))
-											{
-												echo $_SESSION['new-ticket-submission-client-email'];
-												unset($_SESSION['new-ticket-submission-client-email']);
-											}
-											else
-											{
-												echo $language['new-ticket-client-email-error'];
-											}
-											?>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+										}
+										?>
+									</select>
+								</div>
+								
+								<!-- New ticket submission button -->
+								<?php
+								$buttonIsEnabled = false;
+								
+								// Checks if clients and specialists are not missing
+								if ($clients && $specialists)
+								{
+									if (mysqli_num_rows($clients) > 0 && mysqli_num_rows($specialists) > 0)
+									{
+										$buttonIsEnabled = true;
+									}
+								}
+								
+								if ($buttonIsEnabled)
+								{
+									echo '<button type="submit" class="btn btn-primary">' . $language['new-ticket-submit-button-title'] . '</button>';
+								}
+								else
+								{
+									echo '<button type="submit" class="btn btn-primary" disabled>' . $language['new-ticket-submit-button-title'] . '</button>';
+								}
+								?>
+							</form>
 						</div>
 					</div>
 					
-					<!-- Specialist table -->
-					<div class="row" style="<?php echo $tableDisplayStyle; ?>">
-						<div class="col">
-							<table class="table">
-								<thead class="thead-light">
-									<tr>
-										<th colspan="4" style="text-align: center;"><?php echo $language['new-ticket-specialist-header']; ?></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-id-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
-										<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
-									</tr>
-									<tr>
-										<td style="width: 25%;">
-											<?php
-											// Prints specialist ID
-											if (isset($_SESSION['new-ticket-submission-specialist-id']))
-											{
-												echo $_SESSION['new-ticket-submission-specialist-id'];
-												unset($_SESSION['new-ticket-submission-specialist-id']);
-											}
-											else
-											{
-												echo $language['new-ticket-specialist-id-error'];
-											}
-											?>
-										</td>
-										<td style="width: 25%;">
-											<?php
-											// Prints specialist name
-											if (isset($_SESSION['new-ticket-submission-specialist-name']))
-											{
-												echo $_SESSION['new-ticket-submission-specialist-name'];
-												unset($_SESSION['new-ticket-submission-specialist-name']);
-											}
-											else
-											{
-												echo $language['new-ticket-specialist-name-error'];
-											}
-											?>
-										</td>
-										<td style="width: 25%;">
-											<?php
-											// Prints specialist surname
-											if (isset($_SESSION['new-ticket-submission-specialist-surname']))
-											{
-												echo $_SESSION['new-ticket-submission-specialist-surname'];
-												unset($_SESSION['new-ticket-submission-specialist-surname']);
-											}
-											else
-											{
-												echo $language['new-ticket-specialist-surname-error'];
-											}
-											?>
-										</td>
-										<td style="width: 25%;">
-											<?php
-											// Prints specialist email
-											if (isset($_SESSION['new-ticket-submission-specialist-email']))
-											{
-												echo $_SESSION['new-ticket-submission-specialist-email'];
-												unset($_SESSION['new-ticket-submission-specialist-email']);
-											}
-											else
-											{
-												echo $language['new-ticket-specialist-email-error'];
-											}
-											?>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+					<!-- New ticket submission message and tables -->
+					<div class="row" id="new-ticket-submission-message-row">
+						<div class="col" id="new-ticket-submission-message-col">
+							<?php
+							$newTicketMessageDisplayStyle = 'display: none;';
+							
+							if (isset($_SESSION['new-ticket-submission-message']))
+							{
+								$newTicketMessageDisplayStyle = "";
+							}
+							?>
+							
+							<!-- New ticket submission message -->
+							<div class="row" style="<?php echo $newTicketMessageDisplayStyle; ?>">
+								<div class="col">
+									<?php
+									// Prints submission message
+									if (isset($_SESSION['new-ticket-submission-message']))
+									{
+										echo $_SESSION['new-ticket-submission-message'];
+										unset($_SESSION['new-ticket-submission-message']);
+									}
+									?>
+								</div>
+							</div>
+							
+							<!-- Client table -->
+							<div class="row" style="<?php echo $newTicketMessageDisplayStyle; ?>">
+								<div class="col">
+									<table class="table">
+										<thead class="thead-dark">
+											<tr>
+												<th colspan="4" style="text-align: center;"><?php echo $language['new-ticket-client-header']; ?></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-id-header']; ?></th>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
+											</tr>
+											<tr>
+												<td style="width: 25%;">
+													<?php
+													// Prints client ID
+													if (isset($_SESSION['new-ticket-submission-client-id']))
+													{
+														echo $_SESSION['new-ticket-submission-client-id'];
+														unset($_SESSION['new-ticket-submission-client-id']);
+													}
+													else
+													{
+														echo $language['new-ticket-client-id-error'];
+													}
+													?>
+												</td>
+												<td style="width: 25%;">
+													<?php
+													// Prints client name
+													if (isset($_SESSION['new-ticket-submission-client-name']))
+													{
+														echo $_SESSION['new-ticket-submission-client-name'];
+														unset($_SESSION['new-ticket-submission-client-name']);
+													}
+													else
+													{
+														echo $language['new-ticket-client-name-error'];
+													}
+													?>
+												</td>
+												<td style="width: 25%;">
+													<?php
+													// Prints client surname
+													if (isset($_SESSION['new-ticket-submission-client-surname']))
+													{
+														echo $_SESSION['new-ticket-submission-client-surname'];
+														unset($_SESSION['new-ticket-submission-client-surname']);
+													}
+													else
+													{
+														echo $language['new-ticket-client-surname-error'];
+													}
+													?>
+												</td>
+												<td style="width: 25%;">
+													<?php
+													// Prints client email
+													if (isset($_SESSION['new-ticket-submission-client-email']))
+													{
+														echo $_SESSION['new-ticket-submission-client-email'];
+														unset($_SESSION['new-ticket-submission-client-email']);
+													}
+													else
+													{
+														echo $language['new-ticket-client-email-error'];
+													}
+													?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							
+							<!-- Specialist table -->
+							<div class="row" style="<?php echo $newTicketMessageDisplayStyle; ?>">
+								<div class="col">
+									<table class="table">
+										<thead class="thead-light">
+											<tr>
+												<th colspan="4" style="text-align: center;"><?php echo $language['new-ticket-specialist-header']; ?></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-id-header']; ?></th>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-name-header']; ?></th>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-surname-header']; ?></th>
+												<th style="width: 25%;"><?php echo $language['new-ticket-user-email-header']; ?></th>
+											</tr>
+											<tr>
+												<td style="width: 25%;">
+													<?php
+													// Prints specialist ID
+													if (isset($_SESSION['new-ticket-submission-specialist-id']))
+													{
+														echo $_SESSION['new-ticket-submission-specialist-id'];
+														unset($_SESSION['new-ticket-submission-specialist-id']);
+													}
+													else
+													{
+														echo $language['new-ticket-specialist-id-error'];
+													}
+													?>
+												</td>
+												<td style="width: 25%;">
+													<?php
+													// Prints specialist name
+													if (isset($_SESSION['new-ticket-submission-specialist-name']))
+													{
+														echo $_SESSION['new-ticket-submission-specialist-name'];
+														unset($_SESSION['new-ticket-submission-specialist-name']);
+													}
+													else
+													{
+														echo $language['new-ticket-specialist-name-error'];
+													}
+													?>
+												</td>
+												<td style="width: 25%;">
+													<?php
+													// Prints specialist surname
+													if (isset($_SESSION['new-ticket-submission-specialist-surname']))
+													{
+														echo $_SESSION['new-ticket-submission-specialist-surname'];
+														unset($_SESSION['new-ticket-submission-specialist-surname']);
+													}
+													else
+													{
+														echo $language['new-ticket-specialist-surname-error'];
+													}
+													?>
+												</td>
+												<td style="width: 25%;">
+													<?php
+													// Prints specialist email
+													if (isset($_SESSION['new-ticket-submission-specialist-email']))
+													{
+														echo $_SESSION['new-ticket-submission-specialist-email'];
+														unset($_SESSION['new-ticket-submission-specialist-email']);
+													}
+													else
+													{
+														echo $language['new-ticket-specialist-email-error'];
+													}
+													?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
