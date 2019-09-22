@@ -10,19 +10,26 @@ define("TBL_USER", "user");
 define("TBL_TICKET", "ticket");
 
 // Languages
-define("DEFAULT_LANGUAGE", "L_LITHUANIAN");
+define("DEFAULT_LANGUAGE", "L_ENGLISH");
 define("L_ENGLISH", 
 	array(
 		// Page titles
 		'admin-page-title' => 'Admin Interface', 
 		'board-page-title' => 'Client Board', 
 		'specialist-page-title' => 'Specialist Interface', 
+		'visitor-page-title' => 'Visitor Page', 
 		
 		// Navigation bar
 		'navbar-title' => 'Client Board', 
 		'navbar-admin-interface' => 'Admin Interface', 
 		'navbar-client-board' => 'Client Board', 
 		'navbar-specialist-interface' => 'Specialist Interface', 
+		'navbar-visitor-page' => 'Visitor Page', 
+		
+		// Visitor page ticket search form
+		'ticket-search-id' => 'Ticket ID', 
+		'ticket-search-id-placeholder' => 'Ticket ID', 
+		'ticket-search-submit-button-title' => 'Search', 
 		
 		// Admin action buttons
 		'new-user-button-name' => 'Register new user', 
@@ -130,12 +137,19 @@ define("L_LITHUANIAN",
 		'admin-page-title' => 'Administratoriaus Sąsaja', 
 		'board-page-title' => 'Klientų Švieslentė', 
 		'specialist-page-title' => 'Specialisto Sąsaja', 
+		'visitor-page-title' => 'Lankytojo Puslapis', 
 		
 		// Navigation bar
 		'navbar-title' => 'Klientų Švieslentė', 
 		'navbar-admin-interface' => 'Administratoriaus Sąsaja', 
 		'navbar-client-board' => 'Klientų Švieslentė', 
 		'navbar-specialist-interface' => 'Specialisto Sąsaja', 
+		'navbar-visitor-page' => 'Lankytojo Puslapis', 
+		
+		// Visitor page ticket search form
+		'ticket-search-id' => 'Lapuko ID', 
+		'ticket-search-id-placeholder' => 'Lapuko ID', 
+		'ticket-search-submit-button-title' => 'Ieškoti', 
 		
 		// Admin action buttons
 		'new-user-button-name' => 'Registruoti naują vartotoją', 

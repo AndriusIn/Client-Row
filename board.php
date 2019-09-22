@@ -112,8 +112,11 @@ if ($connection)
 			
 			<!-- Links -->
 			<div class="navbar-nav">
+				<!-- Visitor page link -->
+				<a class="nav-item nav-link" href="index.php"><?php echo $language['navbar-visitor-page']; ?></a>
+				
 				<!-- Admin interface link -->
-				<a class="nav-item nav-link" href="index.php"><?php echo $language['navbar-admin-interface']; ?></a>
+				<a class="nav-item nav-link" href="admin.php"><?php echo $language['navbar-admin-interface']; ?></a>
 				
 				<!-- Client board link -->
 				<a class="nav-item nav-link" href="board.php"><?php echo $language['navbar-client-board']; ?></a>
