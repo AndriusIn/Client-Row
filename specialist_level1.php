@@ -52,11 +52,11 @@ $maxRowLoadCount = 10;
 		<script>
 			// Removes ticket
 			$(function () {
-				$(document).on('submit', '.ticket-check-form', function (e) {
+				$(document).on('submit', '.ticket-remove-form', function (e) {
 					e.preventDefault();
 					$.ajax({
 						type: 'post', 
-						url: 'check_ticket.php', 
+						url: 'remove_ticket.php', 
 						data: $('#' + e.target.id).serialize(), 
 						success: function () {
 							// Loads ticket table
@@ -243,7 +243,6 @@ $maxRowLoadCount = 10;
 											$sql = "SELECT";
 											$sql .= " " . TBL_TICKET . ".id AS ticket_id,";
 											$sql .= " " . TBL_TICKET . ".datetime AS ticket_datetime,";
-											$sql .= " " . TBL_TICKET . ".checked_datetime AS ticket_checked_datetime,";
 											$sql .= " " . "client.name AS client_name,";
 											$sql .= " " . "client.surname AS client_surname,";
 											$sql .= " " . "specialist.id AS specialist_id,";
@@ -255,7 +254,7 @@ $maxRowLoadCount = 10;
 											$sql .= " " . "JOIN " . TBL_USER . " AS specialist";
 											$sql .= " " . "ON specialist.id = " . TBL_TICKET . ".specialist_id";
 											$sql .= " " . "WHERE " . TBL_TICKET . ".specialist_id = " . "'$specialistID'";
-											$sql .= " " . "ORDER BY " . TBL_TICKET . ".checked_datetime ASC, " . TBL_TICKET . ".datetime ASC";
+											$sql .= " " . "ORDER BY " . TBL_TICKET . ".datetime ASC";
 											
 											$tickets = mysqli_query($connection, $sql);
 											if ($tickets)
@@ -273,7 +272,6 @@ $maxRowLoadCount = 10;
 											$sql = "SELECT";
 											$sql .= " " . TBL_TICKET . ".id AS ticket_id,";
 											$sql .= " " . TBL_TICKET . ".datetime AS ticket_datetime,";
-											$sql .= " " . TBL_TICKET . ".checked_datetime AS ticket_checked_datetime,";
 											$sql .= " " . "client.name AS client_name,";
 											$sql .= " " . "client.surname AS client_surname,";
 											$sql .= " " . "specialist.id AS specialist_id,";
@@ -285,7 +283,7 @@ $maxRowLoadCount = 10;
 											$sql .= " " . "JOIN " . TBL_USER . " AS specialist";
 											$sql .= " " . "ON specialist.id = " . TBL_TICKET . ".specialist_id";
 											$sql .= " " . "WHERE " . TBL_TICKET . ".specialist_id = " . "'$specialistID'";
-											$sql .= " " . "ORDER BY " . TBL_TICKET . ".checked_datetime ASC, " . TBL_TICKET . ".datetime ASC";
+											$sql .= " " . "ORDER BY " . TBL_TICKET . ".datetime ASC";
 											
 											$tickets = mysqli_query($connection, $sql);
 											if ($tickets)
@@ -317,32 +315,24 @@ $maxRowLoadCount = 10;
 													if ($ticket = mysqli_fetch_assoc($tickets))
 													{
 														echo '<tr>';
-														echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+														echo 	'<td>';
 														echo 		$ticket['ticket_id'];
 														echo 	'</td>';
-														echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+														echo 	'<td>';
 														echo 		$ticket['ticket_datetime'];
 														echo 	'</td>';
-														echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+														echo 	'<td>';
 														echo 		$ticket['client_name'] . ' ' . $ticket['client_surname'];
 														echo 	'</td>';
-														echo 	'<td style="padding: 0px;">';
-														if (is_null($ticket['ticket_checked_datetime']))
-														{
-															echo 	'<form id="ticket-check-form-' . $ticket['ticket_id'] . '" class="ticket-check-form" style="padding: 0px; margin: 0px;" method="post">';
-															echo 		'<input type="hidden" name="ticket-id" value="' . $ticket['ticket_id'] . '">';
-															echo 		'<input type="hidden" name="ticket-datetime" value="' . $ticket['ticket_datetime'] . '">';
-															echo 		'<input type="hidden" name="ticket-client" value="' . $ticket['client_name'] . ' ' . $ticket['client_surname'] . '">';
-															echo 		'<input type="hidden" name="ticket-specialist" value="' . $ticket['specialist_name'] . ' ' . $ticket['specialist_surname'] . '">';
-															echo 		'<input type="hidden" name="specialist-id" value="' . $ticket['specialist_id'] . '">';
-															echo 		'<button type="submit" class="btn btn-danger btn-block m-0">' . $language['ticket-table-check-submit-button-title'] . '</button>';
-															echo 	'</form>';
-														}
-														else
-														{
-															echo 	'<button class="btn btn-success btn-block m-0">' . $language['ticket-table-checked-datetime-message'] . '</button>';
-														}
-														
+														echo 	'<td>';
+														echo 		'<form id="ticket-remove-form-' . $ticket['ticket_id'] . '" class="ticket-remove-form" method="post">';
+														echo 			'<input type="hidden" name="ticket-id" value="' . $ticket['ticket_id'] . '">';
+														echo 			'<input type="hidden" name="ticket-datetime" value="' . $ticket['ticket_datetime'] . '">';
+														echo 			'<input type="hidden" name="ticket-client" value="' . $ticket['client_name'] . ' ' . $ticket['client_surname'] . '">';
+														echo 			'<input type="hidden" name="ticket-specialist" value="' . $ticket['specialist_name'] . ' ' . $ticket['specialist_surname'] . '">';
+														echo 			'<input type="hidden" name="specialist-id" value="' . $ticket['specialist_id'] . '">';
+														echo 			'<button type="submit" class="btn btn-danger btn-block">' . $language['ticket-table-submit-button-title'] . '</button>';
+														echo 		'</form>';
 														echo 	'</td>';
 														echo '</tr>';
 													}
@@ -389,32 +379,24 @@ $maxRowLoadCount = 10;
 													if ($ticket = mysqli_fetch_assoc($tickets))
 													{
 														echo '<tr id="load-ticket-' . $i . '" style="display: none;">';
-														echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+														echo 	'<td>';
 														echo 		$ticket['ticket_id'];
 														echo 	'</td>';
-														echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+														echo 	'<td>';
 														echo 		$ticket['ticket_datetime'];
 														echo 	'</td>';
-														echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+														echo 	'<td>';
 														echo 		$ticket['client_name'] . ' ' . $ticket['client_surname'];
 														echo 	'</td>';
-														echo 	'<td style="padding: 0px;">';
-														if (is_null($ticket['ticket_checked_datetime']))
-														{
-															echo 	'<form id="ticket-check-form-' . $ticket['ticket_id'] . '" class="ticket-check-form" style="padding: 0px; margin: 0px;" method="post">';
-															echo 		'<input type="hidden" name="ticket-id" value="' . $ticket['ticket_id'] . '">';
-															echo 		'<input type="hidden" name="ticket-datetime" value="' . $ticket['ticket_datetime'] . '">';
-															echo 		'<input type="hidden" name="ticket-client" value="' . $ticket['client_name'] . ' ' . $ticket['client_surname'] . '">';
-															echo 		'<input type="hidden" name="ticket-specialist" value="' . $ticket['specialist_name'] . ' ' . $ticket['specialist_surname'] . '">';
-															echo 		'<input type="hidden" name="specialist-id" value="' . $ticket['specialist_id'] . '">';
-															echo 		'<button type="submit" class="btn btn-danger btn-block m-0">' . $language['ticket-table-check-submit-button-title'] . '</button>';
-															echo 	'</form>';
-														}
-														else
-														{
-															echo 	'<button class="btn btn-success btn-block m-0">' . $language['ticket-table-checked-datetime-message'] . '</button>';
-														}
-														
+														echo 	'<td>';
+														echo 		'<form id="ticket-remove-form-' . $ticket['ticket_id'] . '" class="ticket-remove-form" method="post">';
+														echo 			'<input type="hidden" name="ticket-id" value="' . $ticket['ticket_id'] . '">';
+														echo 			'<input type="hidden" name="ticket-datetime" value="' . $ticket['ticket_datetime'] . '">';
+														echo 			'<input type="hidden" name="ticket-client" value="' . $ticket['client_name'] . ' ' . $ticket['client_surname'] . '">';
+														echo 			'<input type="hidden" name="ticket-specialist" value="' . $ticket['specialist_name'] . ' ' . $ticket['specialist_surname'] . '">';
+														echo 			'<input type="hidden" name="specialist-id" value="' . $ticket['specialist_id'] . '">';
+														echo 			'<button type="submit" class="btn btn-danger btn-block">' . $language['ticket-table-submit-button-title'] . '</button>';
+														echo 		'</form>';
 														echo 	'</td>';
 														echo '</tr>';
 													}
@@ -433,11 +415,11 @@ $maxRowLoadCount = 10;
 						</div>
 					</div>
 					
-					<!-- Ticket check message -->
+					<!-- Ticket remove message -->
 					<?php
 					$messageDisplayStyle = 'display: none;';
 					
-					if (isset($_SESSION['ticket-check-message']))
+					if (isset($_SESSION['ticket-remove-message']))
 					{
 						$messageDisplayStyle = "";
 					}
@@ -446,10 +428,10 @@ $maxRowLoadCount = 10;
 						<div class="col">
 							<?php
 							// Prints submission message
-							if (isset($_SESSION['ticket-check-message']))
+							if (isset($_SESSION['ticket-remove-message']))
 							{
-								echo $_SESSION['ticket-check-message'];
-								unset($_SESSION['ticket-check-message']);
+								echo $_SESSION['ticket-remove-message'];
+								unset($_SESSION['ticket-remove-message']);
 							}
 							?>
 						</div>
@@ -461,70 +443,70 @@ $maxRowLoadCount = 10;
 							<table class="table">
 								<thead class="thead-light">
 									<tr>
-										<th colspan="4" style="text-align: center;"><?php echo $language['ticket-check-table-header']; ?></th>
+										<th colspan="4" style="text-align: center;"><?php echo $language['ticket-remove-table-header']; ?></th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<th><?php echo $language['ticket-check-table-id-header']; ?></th>
-										<th><?php echo $language['ticket-check-table-datetime-header']; ?></th>
-										<th><?php echo $language['ticket-check-table-client-header']; ?></th>
-										<th><?php echo $language['ticket-check-table-specialist-header']; ?></th>
+										<th><?php echo $language['ticket-remove-table-id-header']; ?></th>
+										<th><?php echo $language['ticket-remove-table-datetime-header']; ?></th>
+										<th><?php echo $language['ticket-remove-table-client-header']; ?></th>
+										<th><?php echo $language['ticket-remove-table-specialist-header']; ?></th>
 									</tr>
 									<tr>
 										<td>
 											<?php
 											// Prints ticket ID
-											if (isset($_SESSION['ticket-check-table-id']))
+											if (isset($_SESSION['ticket-remove-table-id']))
 											{
-												echo $_SESSION['ticket-check-table-id'];
-												unset($_SESSION['ticket-check-table-id']);
+												echo $_SESSION['ticket-remove-table-id'];
+												unset($_SESSION['ticket-remove-table-id']);
 											}
 											else
 											{
-												echo $language['ticket-check-table-id-error'];
+												echo $language['ticket-remove-table-id-error'];
 											}
 											?>
 										</td>
 										<td>
 											<?php
 											// Prints ticket datetime
-											if (isset($_SESSION['ticket-check-table-datetime']))
+											if (isset($_SESSION['ticket-remove-table-datetime']))
 											{
-												echo $_SESSION['ticket-check-table-datetime'];
-												unset($_SESSION['ticket-check-table-datetime']);
+												echo $_SESSION['ticket-remove-table-datetime'];
+												unset($_SESSION['ticket-remove-table-datetime']);
 											}
 											else
 											{
-												echo $language['ticket-check-table-datetime-error'];
+												echo $language['ticket-remove-table-datetime-error'];
 											}
 											?>
 										</td>
 										<td>
 											<?php
 											// Prints ticket client
-											if (isset($_SESSION['ticket-check-table-client']))
+											if (isset($_SESSION['ticket-remove-table-client']))
 											{
-												echo $_SESSION['ticket-check-table-client'];
-												unset($_SESSION['ticket-check-table-client']);
+												echo $_SESSION['ticket-remove-table-client'];
+												unset($_SESSION['ticket-remove-table-client']);
 											}
 											else
 											{
-												echo $language['ticket-check-table-client-error'];
+												echo $language['ticket-remove-table-client-error'];
 											}
 											?>
 										</td>
 										<td>
 											<?php
 											// Prints ticket specialist
-											if (isset($_SESSION['ticket-check-table-specialist']))
+											if (isset($_SESSION['ticket-remove-table-specialist']))
 											{
-												echo $_SESSION['ticket-check-table-specialist'];
-												unset($_SESSION['ticket-check-table-specialist']);
+												echo $_SESSION['ticket-remove-table-specialist'];
+												unset($_SESSION['ticket-remove-table-specialist']);
 											}
 											else
 											{
-												echo $language['ticket-check-table-specialist-error'];
+												echo $language['ticket-remove-table-specialist-error'];
 											}
 											?>
 										</td>
