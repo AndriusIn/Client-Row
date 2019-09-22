@@ -55,6 +55,7 @@ if ($connection)
 	$sql .= " " . "ON client.id = " . TBL_TICKET . ".client_id";
 	$sql .= " " . "JOIN " . TBL_USER . " AS specialist";
 	$sql .= " " . "ON specialist.id = " . TBL_TICKET . ".specialist_id";
+	$sql .= " " . "WHERE " . TBL_TICKET . ".checked_datetime IS NULL";
 	$sql .= " " . "ORDER BY " . TBL_TICKET . ".datetime ASC";
 	
 	$tickets = mysqli_query($connection, $sql);
