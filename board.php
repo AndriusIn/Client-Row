@@ -46,6 +46,7 @@ if ($connection)
 {
 	$sql = "SELECT";
 	$sql .= " " . TBL_TICKET . ".id AS ticket_id,";
+	$sql .= " " . TBL_TICKET . ".specialist_id AS ticket_specialist_id,";
 	$sql .= " " . "client.name AS client_name,";
 	$sql .= " " . "client.surname AS client_surname,";
 	$sql .= " " . "specialist.name AS specialist_name,";
@@ -64,9 +65,6 @@ if ($connection)
 		$ticketCount = mysqli_num_rows($tickets);
 	}
 }
-
-// Creates load button array
-$loadButtonArray = [];
 ?>
 <html>
 	<head>
@@ -144,6 +142,7 @@ $loadButtonArray = [];
 								<th><?php echo $language['client-board-ticket-id-header']; ?></th>
 								<th><?php echo $language['client-board-client-header']; ?></th>
 								<th><?php echo $language['client-board-specialist-header']; ?></th>
+								<th><?php echo $language['client-board-average-duration-header']; ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -152,7 +151,7 @@ $loadButtonArray = [];
 							if ($ticketCount === 0)
 							{
 								echo '<tr>';
-								echo 	'<td colspan="3" style="text-align: center;">';
+								echo 	'<td colspan="4" style="text-align: center;">';
 								echo 		$language['client-board-tickets-error'];
 								echo 	'</td>';
 								echo '</tr>';
@@ -178,6 +177,19 @@ $loadButtonArray = [];
 												echo 	'</td>';
 												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['specialist_name'] . ' ' . $ticket['specialist_surname'];
+												echo 	'</td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+												$sql = "SELECT SEC_TO_TIME(FLOOR(AVG(TIME_TO_SEC(waiting_duration)))) AS avg_wait FROM " . TBL_TICKET . " WHERE specialist_id = " . $ticket['ticket_specialist_id'];
+												$result = mysqli_query($connection, $sql);
+												$avg_wait = mysqli_fetch_assoc($result)['avg_wait'];
+												if (is_null($avg_wait))
+												{
+													echo 	$language['client-board-average-duration-error'];
+												}
+												else
+												{
+													echo 	$avg_wait;
+												}
 												echo 	'</td>';
 												echo '</tr>';
 											}
@@ -234,6 +246,19 @@ $loadButtonArray = [];
 												echo 	'</td>';
 												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['specialist_name'] . ' ' . $ticket['specialist_surname'];
+												echo 	'</td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
+												$sql = "SELECT SEC_TO_TIME(FLOOR(AVG(TIME_TO_SEC(waiting_duration)))) AS avg_wait FROM " . TBL_TICKET . " WHERE specialist_id = " . $ticket['ticket_specialist_id'];
+												$result = mysqli_query($connection, $sql);
+												$avg_wait = mysqli_fetch_assoc($result)['avg_wait'];
+												if (is_null($avg_wait))
+												{
+													echo 	$language['client-board-average-duration-error'];
+												}
+												else
+												{
+													echo 	$avg_wait;
+												}
 												echo 	'</td>';
 												echo '</tr>';
 											}

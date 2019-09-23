@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2019 at 11:48 PM
+-- Generation Time: Sep 23, 2019 at 09:58 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.8
 
@@ -31,8 +31,10 @@ SET time_zone = "+00:00";
 CREATE TABLE `ticket` (
   `id` int(11) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT current_timestamp(),
+  `arrival_datetime` datetime DEFAULT NULL,
   `checked_datetime` datetime DEFAULT NULL,
-  `visit_time` time DEFAULT NULL,
+  `waiting_duration` time DEFAULT NULL,
+  `visit_duration` time DEFAULT NULL,
   `client_id` int(11) NOT NULL,
   `specialist_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
