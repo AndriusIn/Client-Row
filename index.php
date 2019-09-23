@@ -146,35 +146,46 @@ if ($connection)
 									$result = mysqli_query($connection, $sql);
 									if ($result)
 									{
-										$ticket = mysqli_fetch_assoc($result);
-										echo '<tr>';
-										echo 	'<td>';
-										echo 		$ticket['ticket_id'];
-										echo 	'</td>';
-										echo 	'<td>';
-										echo 		$ticket['client_name'] . ' ' . $ticket['client_surname'];
-										echo 	'</td>';
-										echo 	'<td>';
-										echo 		$ticket['specialist_name'] . ' ' . $ticket['specialist_surname'];
-										echo 	'</td>';
-										echo 	'<td>';
-										echo 		'<div class="row" id="update-average-duration-row">';
-										echo 			'<div class="col" id="update-average-duration-col">';
-										$sql = "SELECT SEC_TO_TIME(FLOOR(AVG(TIME_TO_SEC(waiting_duration)))) AS avg_wait FROM " . TBL_TICKET . " WHERE specialist_id = " . $ticket['ticket_specialist_id'];
-										$result = mysqli_query($connection, $sql);
-										$avg_wait = mysqli_fetch_assoc($result)['avg_wait'];
-										if (is_null($avg_wait))
+										if (mysqli_num_rows($result) > 0)
 										{
-											echo 			$language['ticket-search-table-average-duration-error'];
+											$ticket = mysqli_fetch_assoc($result);
+											echo '<tr>';
+											echo 	'<td>';
+											echo 		$ticket['ticket_id'];
+											echo 	'</td>';
+											echo 	'<td>';
+											echo 		$ticket['client_name'] . ' ' . $ticket['client_surname'];
+											echo 	'</td>';
+											echo 	'<td>';
+											echo 		$ticket['specialist_name'] . ' ' . $ticket['specialist_surname'];
+											echo 	'</td>';
+											echo 	'<td>';
+											echo 		'<div class="row" id="update-average-duration-row">';
+											echo 			'<div class="col" id="update-average-duration-col">';
+											$sql = "SELECT SEC_TO_TIME(FLOOR(AVG(TIME_TO_SEC(waiting_duration)))) AS avg_wait FROM " . TBL_TICKET . " WHERE specialist_id = " . $ticket['ticket_specialist_id'];
+											$result = mysqli_query($connection, $sql);
+											$avg_wait = mysqli_fetch_assoc($result)['avg_wait'];
+											if (is_null($avg_wait))
+											{
+												echo 			$language['ticket-search-table-average-duration-error'];
+											}
+											else
+											{
+												echo 			$avg_wait;
+											}
+											echo 			'</div>';
+											echo 		'</div>';
+											echo 	'</td>';
+											echo '</tr>';
 										}
 										else
 										{
-											echo 			$avg_wait;
+											echo '<tr>';
+											echo 	'<td colspan="4" style="text-align: center;">';
+											echo 		$language['ticket-search-id-error'];
+											echo 	'</td>';
+											echo '</tr>';
 										}
-										echo 			'</div>';
-										echo 		'</div>';
-										echo 	'</td>';
-										echo '</tr>';
 									}
 									else
 									{
