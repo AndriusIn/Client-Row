@@ -33,6 +33,12 @@ if ($connection)
 	$connection->query('set character_set_server=utf8');
 }
 
+// Sets minimum visit time (H:M:S)
+$min_visit_time = "0:5:0";
+
+// Sets maximum visit time (H:M:S)
+$max_visit_time = "0:30:0";
+
 // Gets ticket ID
 $ticket_id = $_POST['ticket-id'];
 
@@ -51,7 +57,15 @@ $_SESSION['ticket-check-message'] = '<p style="display: inline;">' . $language['
 // Checks ticket
 if ($connection)
 {
-	$sql = "UPDATE " . TBL_TICKET . " SET checked_datetime = NOW() WHERE id = " . "'$ticket_id'";
+	// Visit time function:
+	// SEC_TO_TIME(FLOOR(RAND() * (TIME_TO_SEC('$max_visit_time') - TIME_TO_SEC('$min_visit_time') + 1) + TIME_TO_SEC('$min_visit_time')))
+	// 1. Converts minimum and maximum visit times to seconds
+	// 2. Calculates a random number between minimum and maximum seconds
+	// 3. Converts calculated number (seconds) back to time
+	
+	$sql = "UPDATE " . TBL_TICKET . " SET checked_datetime = NOW(), " 
+		. "visit_time = SEC_TO_TIME(FLOOR(RAND() * (TIME_TO_SEC('$max_visit_time') - TIME_TO_SEC('$min_visit_time') + 1) + TIME_TO_SEC('$min_visit_time'))) " 
+		. "WHERE id = " . "'$ticket_id'";
 	$result = mysqli_query($connection, $sql);
 	if (!$result)
 	{

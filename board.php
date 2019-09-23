@@ -64,6 +64,9 @@ if ($connection)
 		$ticketCount = mysqli_num_rows($tickets);
 	}
 }
+
+// Creates load button array
+$loadButtonArray = [];
 ?>
 <html>
 	<head>
@@ -135,7 +138,7 @@ if ($connection)
 			<!-- Ticket table -->
 			<div class="row">
 				<div class="col">
-					<table class="table">
+					<table class="table table-striped">
 						<thead class="thead-dark">
 							<tr>
 								<th><?php echo $language['client-board-ticket-id-header']; ?></th>
@@ -145,6 +148,7 @@ if ($connection)
 						</thead>
 						<tbody>
 							<?php
+							$loadButtonArray = [];
 							if ($ticketCount === 0)
 							{
 								echo '<tr>';
@@ -166,13 +170,13 @@ if ($connection)
 											if ($ticket = mysqli_fetch_assoc($tickets))
 											{
 												echo '<tr>';
-												echo 	'<td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['ticket_id'];
 												echo 	'</td>';
-												echo 	'<td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['client_name'] . ' ' . $ticket['client_surname'];
 												echo 	'</td>';
-												echo 	'<td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['specialist_name'] . ' ' . $ticket['specialist_surname'];
 												echo 	'</td>';
 												echo '</tr>';
@@ -194,25 +198,27 @@ if ($connection)
 											$ticketsToPrint = $ticketsLeftToPrint;
 										}
 										
-										// Prints load button
+										// Adds load button to array
 										$loadButtonDisplayStyle = 'display: none;';
 										if ($loadButtonCount === 1)
 										{
 											$loadButtonDisplayStyle = "";
 										}
-										echo '<tr id="load-button-row-' . $loadButtonCount . '" style="' . $loadButtonDisplayStyle . '">';
-										echo 	'<td colspan="3" style="padding: 0px;">';
-										echo 		'<button ' 
-														. 'id="load-button-' . $loadButtonCount . '" ' 
-														. 'data-id="' . $loadButtonCount . '" ' 
-														. 'data-start="' . $i . '" ' 
-														. 'data-end="' . ($i + $ticketsToPrint) . '" ' 
-														. 'data-next-button="' . ($loadButtonCount + 1) . '" ' 
-														. 'class="btn btn-primary btn-block load-more-tickets">' 
-														. $language['client-board-load-button-title'] . ' (' . $ticketsToPrint . ')' 
-														. '</button>';
-										echo 	'</td>';
-										echo '</tr>';
+										$loadButton = "";
+										$loadButton .= '<tr id="load-button-row-' . $loadButtonCount . '" style="' . $loadButtonDisplayStyle . '">';
+										$loadButton .= 		'<td colspan="3" style="padding: 0px;">';
+										$loadButton .= 			'<button ' 
+																	. 'id="load-button-' . $loadButtonCount . '" ' 
+																	. 'data-id="' . $loadButtonCount . '" ' 
+																	. 'data-start="' . $i . '" ' 
+																	. 'data-end="' . ($i + $ticketsToPrint) . '" ' 
+																	. 'data-next-button="' . ($loadButtonCount + 1) . '" ' 
+																	. 'class="btn btn-primary btn-block load-more-tickets">' 
+																	. $language['client-board-load-button-title'] . ' (' . $ticketsToPrint . ')' 
+																	. '</button>';
+										$loadButton .= 		'</td>';
+										$loadButton .= '</tr>';
+										array_push($loadButtonArray, $loadButton);
 										
 										// Prints loadable tickets
 										for ($j = 1; $j <= $ticketsToPrint; $j++, $i++)
@@ -220,13 +226,13 @@ if ($connection)
 											if ($ticket = mysqli_fetch_assoc($tickets))
 											{
 												echo '<tr id="load-ticket-' . $i . '" style="display: none;">';
-												echo 	'<td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['ticket_id'];
 												echo 	'</td>';
-												echo 	'<td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['client_name'] . ' ' . $ticket['client_surname'];
 												echo 	'</td>';
-												echo 	'<td>';
+												echo 	'<td style="padding-top: 0px; padding-bottom: 0px;">';
 												echo 		$ticket['specialist_name'] . ' ' . $ticket['specialist_surname'];
 												echo 	'</td>';
 												echo '</tr>';
@@ -239,6 +245,23 @@ if ($connection)
 										$i--;
 									}
 								}
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<!-- Load buttons -->
+			<div class="row">
+				<div class="col">
+					<table class="table">
+						<tbody>
+							<?php
+							// Prints load buttons
+							foreach($loadButtonArray as $loadButton)
+							{
+								echo $loadButton;
 							}
 							?>
 						</tbody>

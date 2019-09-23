@@ -220,7 +220,7 @@ $maxRowLoadCount = 10;
 					<!-- Ticket table -->
 					<div class="row">
 						<div class="col">
-							<table class="table">
+							<table class="table table-striped">
 								<thead class="thead-dark">
 									<tr>
 										<th><?php echo $language['ticket-table-id-header']; ?></th>
@@ -234,6 +234,7 @@ $maxRowLoadCount = 10;
 									// Gets tickets (ticket ID, client name, client surname, specialist name, specialist surname)
 									$tickets;
 									$ticketCount = 0;
+									$loadButtonArray = [];
 									if (isset($_GET['specialist-id']))
 									{
 										if ($connection)
@@ -363,25 +364,27 @@ $maxRowLoadCount = 10;
 													$ticketsToPrint = $ticketsLeftToPrint;
 												}
 												
-												// Prints load button
+												// Adds load button to array
 												$loadButtonDisplayStyle = 'display: none;';
 												if ($loadButtonCount === 1)
 												{
 													$loadButtonDisplayStyle = "";
 												}
-												echo '<tr id="load-button-row-' . $loadButtonCount . '" style="' . $loadButtonDisplayStyle . '">';
-												echo 	'<td colspan="4" style="padding: 0px;">';
-												echo 		'<button ' 
-																. 'id="load-button-' . $loadButtonCount . '" ' 
-																. 'data-id="' . $loadButtonCount . '" ' 
-																. 'data-start="' . $i . '" ' 
-																. 'data-end="' . ($i + $ticketsToPrint) . '" ' 
-																. 'data-next-button="' . ($loadButtonCount + 1) . '" ' 
-																. 'class="btn btn-primary btn-block load-more-tickets">' 
-																. $language['ticket-table-load-button-title'] . ' (' . $ticketsToPrint . ')' 
-																. '</button>';
-												echo 	'</td>';
-												echo '</tr>';
+												$loadButton = "";
+												$loadButton .= '<tr id="load-button-row-' . $loadButtonCount . '" style="' . $loadButtonDisplayStyle . '">';
+												$loadButton .= 		'<td colspan="4" style="padding: 0px;">';
+												$loadButton .= 			'<button ' 
+																			. 'id="load-button-' . $loadButtonCount . '" ' 
+																			. 'data-id="' . $loadButtonCount . '" ' 
+																			. 'data-start="' . $i . '" ' 
+																			. 'data-end="' . ($i + $ticketsToPrint) . '" ' 
+																			. 'data-next-button="' . ($loadButtonCount + 1) . '" ' 
+																			. 'class="btn btn-primary btn-block load-more-tickets">' 
+																			. $language['ticket-table-load-button-title'] . ' (' . $ticketsToPrint . ')' 
+																			. '</button>';
+												$loadButton .= 		'</td>';
+												$loadButton .= '</tr>';
+												array_push($loadButtonArray, $loadButton);
 												
 												// Prints loadable tickets
 												for ($j = 1; $j <= $ticketsToPrint; $j++, $i++)
@@ -426,6 +429,23 @@ $maxRowLoadCount = 10;
 												$i--;
 											}
 										}
+									}
+									?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					
+					<!-- Load buttons -->
+					<div class="row">
+						<div class="col">
+							<table class="table">
+								<tbody>
+									<?php
+									// Prints load buttons
+									foreach($loadButtonArray as $loadButton)
+									{
+										echo $loadButton;
 									}
 									?>
 								</tbody>

@@ -10,7 +10,7 @@ define("TBL_USER", "user");
 define("TBL_TICKET", "ticket");
 
 // Languages
-define("DEFAULT_LANGUAGE", "L_ENGLISH");
+define("DEFAULT_LANGUAGE", "L_LITHUANIAN");
 define("L_ENGLISH", 
 	array(
 		// Page titles
